@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "type": "rdbg",
+      "name": "Debug Rails Server",
+      "request": "launch",
+      "script": "bin/rails",
+      "args": ["server"],
+      "useBundler": true,
+      "env": {
+        "RAILS_ENV": "development"
+      }
+    },
+    {
+      "type": "rdbg",
+      "name": "Debug RSpec",
+      "request": "launch",
+      "command": "rspec",
+      "script": "bin/bundle",
+      "args": ["exec", "rspec"],
+      "askParameters": true,
+      "useBundler": true
+    }
+  ]
+}
