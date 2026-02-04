@@ -100,3 +100,6 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+.vscode
+!.vscode/launch.json
