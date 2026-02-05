@@ -15,8 +15,25 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
 
+  # Table relationships
   has_one :profile, dependent: :destroy, autosave: true
   accepts_nested_attributes_for :profile
+
+  has_many :messages, foreign_key: :sender_id, dependent: :destroy
+  has_many :participants, dependent: :destroy
+  has_many :rooms, through: :participants
+
+  has_many :sent_requests, class_name: "Request", foreign_key: :sender_id, dependent: :destroy
+  has_many :received_requests, class_name: "Request", foreign_key: :receiver_id, dependent: :destroy
+
+  has_many :notifications_received, class_name: "Notification", foreign_key: :recipient_id, dependent: :destroy
+  has_many :notifications_sent, class_name: "Notification", foreign_key: :actor_id, dependent: :destroy
+
+  has_many :active_relationships, class_name: "UserRelation", foreign_key: :requester_id, dependent: :destroy
+  has_many :passive_relationships, class_name: "UserRelation", foreign_key: :receiver_id, dependent: :destroy
+
+  has_many :requesters, through: :passive_relationships, source: :requester
+  has_many :receivers, through: :active_relationships, source: :receiver
 
   # Validations
   validates :username, presence: true, length: { minimum: 5, maximum: 30 }, uniqueness: { case_sensitive: false }, format: { with: VALID_USERNAME_REGEX }
