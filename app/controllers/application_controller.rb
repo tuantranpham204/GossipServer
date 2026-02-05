@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
-  include ApiResponder
+  include ApiStandardization
   include ErrorHandlers
 end
