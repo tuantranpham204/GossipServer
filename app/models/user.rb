@@ -21,4 +21,9 @@ class User < ApplicationRecord
   # Validations
   validates :username, presence: true, length: { minimum: 5, maximum: 30 }, uniqueness: { case_sensitive: false }, format: { with: VALID_USERNAME_REGEX }
   validates :password, presence: true, length: { minimum: 6, maximum: 20 }, format: { with: VALID_PASSWORD_REGEX }
+  validates :email,
+            presence: true,
+            uniqueness: { case_sensitive: false },
+            format: { with: URI::MailTo::EMAIL_REGEXP || VALID_EMAIL_REGEX },
+            length: { maximum: 105 }
 end
