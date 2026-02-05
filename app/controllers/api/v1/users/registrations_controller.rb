@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class User::RegistrationsController < Devise::RegistrationsController
+class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
+  include ApiStandardization
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
@@ -10,9 +11,29 @@ class User::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    build_resource sign_up_params
+    if resource.save
+      if resource.active_for_authentication?
+        sign_up(resource_name, resource)
+        succeed(data: { user: resource, profile: resource.profile })
+      else
+        expire_data_after_sign_in!
+        succeed(message: I18n.t("devise.failure.confirmed"), data: { user: resource })
+      end
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      error_message_builder = ""
+      resource.errors.full_messages.each do |error_message|
+        error_message_builder += error_message.to_s + ", "
+      end
+      error(
+        message: "#{I18n.t("errors.validation_error")}: #{error_message_builder.chomp(", ")}",
+        status: :unprocessable_entity
+      )
+    end
+  end
 
   # GET /resource/edit
   # def edit
@@ -38,7 +59,22 @@ class User::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
+  protected
+
+  def sign_up_params
+    {
+      email: params[:user][:email],
+      password: params[:user][:password],
+      password_confirmation: params[:user][:password_confirmation],
+      username: params[:user][:username],
+      profile_attributes: {
+        name: params[:user][:name],
+        surname: params[:user][:surname],
+        gender: params[:user][:gender],
+        dob: params[:user][:dob]
+      }
+    }
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params

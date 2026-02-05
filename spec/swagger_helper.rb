@@ -18,13 +18,13 @@ RSpec.configure do |config|
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
       info: {
-        title: 'Gossip Server API',
+      title: 'Gossip Server API',
         version: 'v1'
       },
       paths: {},
       servers: [
         {
-          url: "https://#{ ENV['HOST'] || 'localhost' }:#{ ENV['PORT'] || 3000 }"
+          url: "http://#{ ENV['HOST'] || 'localhost' }:#{ ENV['PORT'] || 3000 }"
         }
       ]
     }

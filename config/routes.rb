@@ -12,7 +12,14 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      devise_for :users
+      devise_for :users,
+                 path_names: {
+                   registration: "sign_up"
+                 },
+                 controllers: {
+                   registrations: "api/v1/users/registrations"
+                 },
+                 defaults: { format: :json }
     end
   end
 end
