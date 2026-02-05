@@ -1,4 +1,5 @@
 module ErrorHandlers
+  # Allows this module to be included in classes
   extend ActiveSupport::Concern
 
   included do

@@ -15,6 +15,11 @@ gem "puma", ">= 5.0"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
+
+# API Documentation Swagger UI
+gem 'rswag-api'
+gem 'rswag-ui'
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
@@ -50,4 +55,8 @@ group :development, :test do
 
   # Load environment variables from .env file
   gem "dotenv-rails"
+
+  # API Documentation Swagger UI
+  gem 'rswag-specs'
+  gem 'rspec-rails'
 end
