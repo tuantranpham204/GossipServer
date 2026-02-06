@@ -10,9 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_04_045012) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_05_085652) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "jwt_denylists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "exp", null: false
+    t.string "jti", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "messages", force: :cascade do |t|
     t.jsonb "attachment_data"
@@ -55,14 +62,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_04_045012) do
     t.string "bio", default: ""
     t.datetime "created_at", null: false
     t.date "dob"
-    t.string "first_name", null: false
     t.integer "gender", null: false
     t.boolean "is_email_public", default: false, null: false
     t.boolean "is_gender_public", default: true, null: false
     t.boolean "is_rel_status_public", default: false, null: false
-    t.string "last_name", null: false
+    t.string "name", null: false
     t.integer "relationship_status", default: 0, null: false
     t.integer "status", default: 1, null: false
+    t.string "surname", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
@@ -81,24 +88,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_04_045012) do
 
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.jsonb "metadata"
+    t.string "name"
+    t.integer "room_type", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_relations", force: :cascade do |t|
+  create_table "user_relations", primary_key: ["requester_id", "receiver_id"], force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.bigint "receiver_id", null: false
+    t.integer "relation_type", null: false
+    t.bigint "requester_id", null: false
+    t.integer "status", null: false
     t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_user_relations_on_receiver_id"
+    t.index ["requester_id"], name: "index_user_relations_on_requester_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
+    t.string "encrypted_password", default: "", null: false
     t.string "locale", default: "en"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.integer "roles", default: [1], null: false, array: true
     t.string "timestamps"
     t.datetime "updated_at", null: false
     t.string "username", null: false
-    t.index ["email"], name: "index_users_on_email"
-    t.index ["username"], name: "index_users_on_username"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "messages", "rooms"
@@ -110,4 +131,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_04_045012) do
   add_foreign_key "profiles", "users", on_delete: :cascade
   add_foreign_key "requests", "users", column: "receiver_id"
   add_foreign_key "requests", "users", column: "sender_id"
+  add_foreign_key "user_relations", "users", column: "receiver_id"
+  add_foreign_key "user_relations", "users", column: "requester_id"
 end
