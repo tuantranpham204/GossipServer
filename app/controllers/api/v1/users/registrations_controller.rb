@@ -30,7 +30,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
       end
       error(
         message: "#{I18n.t("errors.validation_error")}: #{error_message_builder.chomp(", ")}",
-        status: :unprocessable_entity
+        status: :unprocessable_content
       )
     end
   end

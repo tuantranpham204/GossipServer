@@ -31,10 +31,10 @@ paths:
                       default: 12a1tranphamtuan69@gmail.com
                     password:
                       type: string
-                      default: password
+                      default: Tuan08/05/2004
                     password_confirmation:
                       type: string
-                      default: password
+                      default: Tuan08/05/2004
                     name:
                       type: string
                     surname:

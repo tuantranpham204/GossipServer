@@ -103,3 +103,4 @@ yarn-debug.log*
 /public/uploads.
 
 .vscode
+notes.txt

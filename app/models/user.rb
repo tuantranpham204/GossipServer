@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Validation RegEx
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_USERNAME_REGEX = /\A(?![._-])(?!.*[._-]{2})[a-zA-Z0-9._-]+(?<![._-])\z/
-  VALID_PASSWORD_REGEX = /\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,20}\z/
+  VALID_PASSWORD_REGEX = /\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?])(?=\S+$).{8,20}\z/
 
   # Roles
   ROLES = {
