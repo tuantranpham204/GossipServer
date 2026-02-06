@@ -19,7 +19,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
         succeed(data: { user_id: resource.id }, message: I18n.t("devise.registrations.signed_up"), status: :created)
       else
         expire_data_after_sign_in!
-        succeed(message: I18n.t("devise.failure.confirmed"), data: { user_id: resource.id }, status: :created)
+        succeed(message: I18n.t("devise.failure.unconfirmed"), data: { user_id: resource.id }, status: :created)
       end
     else
       clean_up_passwords resource

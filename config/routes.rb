@@ -17,7 +17,8 @@ Rails.application.routes.draw do
                    registration: "sign_up"
                  },
                  controllers: {
-                   registrations: "api/v1/users/registrations"
+                   registrations: "api/v1/users/registrations",
+                   confirmations: "api/v1/users/confirmations"
                  },
                  defaults: { format: :json }
     end

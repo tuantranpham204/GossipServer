@@ -118,6 +118,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_085652) do
     t.string "reset_password_token"
     t.integer "roles", default: [1], null: false, array: true
     t.string "timestamps"
+    t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.string "username", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
