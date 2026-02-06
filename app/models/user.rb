@@ -43,4 +43,9 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             format: { with: URI::MailTo::EMAIL_REGEXP || VALID_EMAIL_REGEX },
             length: { maximum: 105 }
+
+  # Override Devise's method to send emails asynchronously
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
 end

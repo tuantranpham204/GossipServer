@@ -36,5 +36,8 @@ module GossipServer
     config.i18n.available_locales = [ :en, :vi ]
     # Set default locale
     config.i18n.default_locale = :en
+
+    # Background jobs
+    config.active_job.queue_adapter = :sidekiq
   end
 end
