@@ -26,6 +26,11 @@ Rails.application.routes.draw do
                    sessions: "api/v1/users/sessions"
                  },
                  defaults: { format: :json }
+      resources :profiles, only: [] do
+        collection do
+          get :search, to: "profile#search"
+        end
+      end
     end
   end
 end
