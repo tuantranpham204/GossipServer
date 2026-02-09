@@ -3,7 +3,7 @@ class CustomDeviseFailureApp < Devise::FailureApp
   def respond
     begin
       if request.format == :json || request.content_type.to_s.include?("json")
-        self.status = :unauthenticated
+        self.status = :unauthorized
         self.content_type = "application/json"
 
         self.response_body = {
@@ -14,10 +14,10 @@ class CustomDeviseFailureApp < Devise::FailureApp
           errors: nil
         }.to_json
       else
-        error(message: "Cannot raise devise error automatically: #{i18n_message}", status: :unauthenticated)
+        error(message: "Cannot raise devise error automatically: #{i18n_message}", status: :unauthorized)
       end
     rescue => e
-      error(message: "Cannot raise devise error automatically: #{e.message}", status: :unauthenticated, data: { devise_message: i18n_message }, errors: e.backtrace.join("\n"))
+      error(message: "Cannot raise devise error automatically: #{e.message}", status: :unauthorized, data: { devise_message: i18n_message }, errors: e.backtrace.join("\n"))
     end
   end
 end
