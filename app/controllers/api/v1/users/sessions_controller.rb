@@ -77,7 +77,7 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
           surname: resource.profile.surname,
           avatar_url: resource.profile.avatar_data["url"]
         }
-      }, message: I18n.t("devise.sessions.signed_in"))
+    }, message: I18n.t("devise.sessions.signed_in"))
     else
       error(message: I18n.t("devise.failure.invalid", authentication_keys: "email", default: "Invalid email or password."), status: :unauthorized)
     end
