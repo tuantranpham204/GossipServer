@@ -1,6 +1,8 @@
+require "sidekiq/web"
 Rails.application.routes.draw do
   mount Rswag::Api::Engine => "/api-docs"
   mount Rswag::Ui::Engine => "/api-docs"
+  mount Sidekiq::Web => "/sidekiq"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -14,10 +16,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       devise_for :users,
                  path_names: {
+                   sign_in: "sign_in",
+                   sign_out: "sign_out",
                    registration: "sign_up"
                  },
                  controllers: {
-                   registrations: "api/v1/users/registrations"
+                   registrations: "api/v1/users/registrations",
+                   confirmations: "api/v1/users/confirmations",
+                   sessions: "api/v1/users/sessions"
                  },
                  defaults: { format: :json }
     end

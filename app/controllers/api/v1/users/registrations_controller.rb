@@ -16,10 +16,10 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
     if resource.save
       if resource.active_for_authentication?
         sign_up(resource_name, resource)
-        succeed(data: { user: resource, profile: resource.profile })
+        succeed(data: { user_id: resource.id }, message: I18n.t("devise.registrations.signed_up"), status: :created)
       else
         expire_data_after_sign_in!
-        succeed(message: I18n.t("devise.failure.confirmed"), data: { user: resource })
+        succeed(message: I18n.t("devise.failure.unconfirmed"), data: { user_id: resource.id }, status: :created)
       end
     else
       clean_up_passwords resource
@@ -29,7 +29,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
         error_message_builder += error_message.to_s + ", "
       end
       error(
-        message: "#{I18n.t("errors.validation_error")}: #{error_message_builder.chomp(", ")}",
+        message: "#{I18n.t("errors.validation_error")}: #{error_message_builder.chomp(", ")}.",
         status: :unprocessable_content
       )
     end
