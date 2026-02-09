@@ -1,0 +1,103 @@
+---
+openapi: 3.0.1
+info:
+  title: Gossip Server API
+  version: v1
+paths:
+  "/api/v1/users/sign_up":
+    post:
+      summary: Sign Up
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                      default: 12a1tranphamtuan69@gmail.com
+                    password:
+                      type: string
+                      default: Tuan08/05/2004
+                    password_confirmation:
+                      type: string
+                      default: Tuan08/05/2004
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    gender:
+                      type: integer
+                      default: 1
+                    dob:
+                      type: string
+                      format: date
+                      example: '2000-01-01'
+                  required:
+                  - username
+                  - email
+                  - password
+                  - password_confirmation
+                  - name
+                  - surname
+                  - gender
+                  - dob
+  "/api/v1/users/sign_in":
+    post:
+      summary: Sign In
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      default: 12a1tranphamtuan69@gmail.com
+                    password:
+                      type: string
+                      default: Tuan08/05/2004
+                  required:
+                  - email
+                  - password
+  "/api/v1/users/sign_out":
+    delete:
+      summary: Sign Out
+      tags:
+      - Authentication
+      responses:
+        '401':
+          description: unauthorized
+servers:
+- url: http://localhost:3000
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT key necessary to use API calls
+      type: apiKey
+      name: Authorization
+      in: header

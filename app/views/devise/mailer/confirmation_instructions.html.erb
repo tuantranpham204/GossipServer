@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Account</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        /* Reset & Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout */
+        .email-wrapper {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000000;
+            background-image: url('https://i.pinimg.com/originals/e5/40/08/e54008fec896ec085da559cf537d6f32.gif');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex; /* Flexbox for centering in modern clients/browsers */
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        /* Fallback for email clients that don't support Flexbox */
+        table.email-wrapper-table {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            background-image: url('https://i.pinimg.com/originals/e5/40/08/e54008fec896ec085da559cf537d6f32.gif');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            /* Glassmorphism System Token */
+            background: rgba(0, 0, 0, 0.7); /* Darker fallback for readability */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header */
+        .email-header {
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Content */
+        .email-body {
+            padding: 20px 40px 40px;
+            text-align: center;
+        }
+
+        .email-heading {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #a5b4fc, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent; /* Fallback color set via basic style if gradient fails */
+            background-size: 200% auto;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+        
+        /* Fallback logic for text gradient */
+        @supports not (background-clip: text) {
+            .email-heading {
+                color: #ffffff;
+                background: none;
+            }
+        }
+
+        .email-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #d1d5db; /* Gray-300 */
+            margin-bottom: 32px;
+        }
+
+        /* Button */
+        .activation-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #4f46e5); /* Brand-500 to Brand-600 */
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 16px 40px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activation-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Links */
+        .link-url {
+            color: #818cf8; /* Brand-400 */
+            text-decoration: none;
+            word-break: break-all;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .email-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af; /* Gray-400 */
+        }
+
+        .footer-text {
+            margin: 6px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <table class="email-wrapper-table" cellpadding="0" cellspacing="0" border="0" align="center">
+            <tr>
+                <td align="center" valign="middle">
+                    
+                    <div class="email-container">
+                        <!-- Header -->
+                        <div class="email-header">
+                            <%= image_tag "https://res.cloudinary.com/fixedamateur/image/upload/v1770359994/logo_xys5gx.png", alt: "Gossip Logo", class: "logo-img" %>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="email-body">
+                            <h1 class="email-heading">Verify Your Account</h1>
+                            <p class="email-text">
+                                Hi <%= @username %>,<br><br>
+                                Welcome to the inner circle. Validate your identity to access the latest gossip and seamless communication.
+                            </p>
+
+                            <%= link_to "Activate Account", api_v1_user_confirmation_url(confirmation_token: @token) , class: "activation-button" %>
+
+                            <div style="height: 40px;"></div>
+
+                            <p style="font-size: 13px; color: #6b7280; margin: 0;">
+                                Or copy this link:<br>
+                                <%= link_to api_v1_user_confirmation_url(confirmation_token: @token), api_v1_user_confirmation_url(confirmation_token: @token), class: "link-url" %>
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="email-footer">
+                            <p class="footer-text">Sent with intent from Gossip Inc.</p>
+                            <p class="footer-text">&copy; <%= Time.current.year %> Gossip Inc. All rights reserved.</p>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -5,7 +5,6 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.string :email, null: false
       t.integer :roles, null: false, array: true, default: [ 1 ]
       t.string :locale, default: "en"
-      t.string :timestamps
 
       t.timestamps
     end

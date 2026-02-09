@@ -1,1 +1,3 @@
 vi:
+  errors:
+    validation_error: "Lỗi xác thực"
