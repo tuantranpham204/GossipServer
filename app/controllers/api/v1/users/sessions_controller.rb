@@ -11,16 +11,17 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     user = User.find_by(email: sign_in_params[:email])
-    if user && user.valid_password?(sign_in_params[:password])
+    if user != nil && user.valid_password?(sign_in_params[:password])
       sign_in(resource_name, user)
       @token = request.env["warden-jwt_auth.token"]
       respond_with user, location: after_sign_in_path_for(user)
     else
       # Fallback to warden authentication
-      self.resource = warden.authenticate!(auth_options)
-      sign_in(resource_name, resource)
-      @token = request.env["warden-jwt_auth.token"]
-      respond_with resource, location: after_sign_in_path_for(resource)
+      # self.resource = warden.authenticate!(auth_options)
+      # sign_in(resource_name, resource)
+      # @token = request.env["warden-jwt_auth.token"]
+      # respond_with resource, location: after_sign_in_path_for(resource)
+      error(message: I18n.t("devise.failure.invalid", authentication_keys: "email", default: "Invalid email or password."), status: :unauthorized)
     end
   end
 
