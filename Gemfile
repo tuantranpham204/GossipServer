@@ -30,6 +30,10 @@ gem 'sidekiq'
 # Authorization
 gem 'pundit'
 
+# Search using searchkick, a wrapper for elasticsearch
+gem 'elasticsearch'
+gem 'searchkick'
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
