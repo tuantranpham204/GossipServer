@@ -4,4 +4,16 @@ class Profile < ApplicationRecord
 
   validates :name, presence: true, length: { minimum: 1, maximum: 50 }, format: { with: VALID_NAME_REGEX }
   validates :surname, presence: true, length: { minimum: 1, maximum: 50 }, format: { with: VALID_NAME_REGEX }
+
+  searchkick word_start: [ :name, :surname, :username, :full_name, :reversed_full_name ]
+
+  def search_data
+    {
+      username: user.username,
+      name: name,
+      surname: surname,
+      full_name: "#{name} #{surname}".strip,
+      reversed_full_name: "#{surname} #{name}".strip
+    }
+  end
 end
