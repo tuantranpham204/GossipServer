@@ -34,6 +34,9 @@ gem 'pundit'
 gem 'elasticsearch'
 gem 'searchkick'
 
+# Pagination
+gem 'kaminari'
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
