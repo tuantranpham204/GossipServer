@@ -26,7 +26,17 @@ RSpec.configure do |config|
         {
           url: "http://#{ ENV['HOST'] || 'localhost' }:#{ ENV['PORT'] || 3000 }"
         }
-      ]
+      ],
+      components: {
+        securitySchemes: {
+          Bearer: {
+            description: 'JWT key necessary to use API calls',
+            type: :apiKey,
+            name: 'Authorization',
+            in: :header
+          }
+        }
+      }
     }
   }
 

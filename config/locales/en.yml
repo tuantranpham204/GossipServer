@@ -1,3 +1,4 @@
 en:
   errors:
     validation_error: "Validation error"
+    unpermitted: "You are not permitted to perform this action."

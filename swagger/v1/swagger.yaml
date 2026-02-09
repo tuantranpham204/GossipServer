@@ -55,5 +55,49 @@ paths:
                   - surname
                   - gender
                   - dob
+  "/api/v1/users/sign_in":
+    post:
+      summary: Sign In
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      default: 12a1tranphamtuan69@gmail.com
+                    password:
+                      type: string
+                      default: Tuan08/05/2004
+                  required:
+                  - email
+                  - password
+  "/api/v1/users/sign_out":
+    delete:
+      summary: Sign Out
+      tags:
+      - Authentication
+      responses:
+        '401':
+          description: unauthorized
 servers:
 - url: http://localhost:3000
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT key necessary to use API calls
+      type: apiKey
+      name: Authorization
+      in: header
