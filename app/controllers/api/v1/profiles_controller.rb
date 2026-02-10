@@ -63,6 +63,9 @@ class Api::V1::ProfilesController < ApplicationController
           capacity: "host",
           username: @profile.user.username,
           email: @profile.user.email,
+          friends_amount: @profile.user.friends_amount,
+          followers_amount: @profile.user.followers_amount,
+          following_amount: @profile.user.following_amount,
           **profile_json
         }
       )
