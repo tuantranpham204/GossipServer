@@ -33,6 +33,9 @@ class Api::V1::ProfileController < ApplicationController
                     avatar_data: {
                       url: profile.avatar_data["url"]
                     },
+                    friends_amount: profile.user.friends_amount,
+                    followers_amount: profile.user.followers_amount,
+                    following_amount: profile.user.following_amount,
                     is_email_public: profile.is_email_public,
                     is_gender_public: profile.is_gender_public,
                     is_rel_status_public: profile.is_rel_status_public
