@@ -95,4 +95,59 @@ class Api::V1::ProfilesController < ApplicationController
       )
     end
   end
+
+  def update
+    @profile = Profile.find_by(user_id: current_user.id)
+    permitted_params = params.permit(:name, :surname, :bio, :dob, :gender, :relationship_status, :is_email_public, :is_gender_public, :is_rel_status_public)
+    authorize @profile, :update?, policy_class: Api::V1::ProfilePolicy
+    if !@profile
+      error(message: I18n.t("errors.resource_not_found", resource: "Profile"), status: :not_found)
+    elsif @profile.update(permitted_params)
+      profile_json = @profile.as_json
+      succeed(
+        data: {
+          capacity: "host",
+          username: @profile.user.username,
+          email: @profile.user.email,
+          avatar_url: @profile.avatar_url,
+          bg_img_url: @profile.bg_img_url,
+          friends_amount: @profile.user.friends_amount,
+          followers_amount: @profile.user.followers_amount,
+          following_amount: @profile.user.following_amount,
+          **profile_json
+        }
+      )
+    else
+      error(message: I18n.t("errors.validation_error"), status: :unprocessable_entity)
+    end
+  end
+
+
+  def update_images
+    @profile = Profile.find_by(user_id: current_user.id)
+    authorize @profile, :update?, policy_class: Api::V1::ProfilePolicy
+    if !@profile
+      error(message: I18n.t("errors.resource_not_found", resource: "Profile"), status: :not_found)
+      return
+    end
+    type = params[:type]
+    case type
+    when "avatar"
+        @profile.update(avatar: params[:image])
+    when "bg_img"
+        @profile.update(bg_img: params[:image])
+    end
+    succeed(data: { url: type == "avatar" ? @profile.avatar_url : @profile.bg_img_url })
+  end
+
+  def get_images
+    @profile = Profile.find_by(user_id: params[:user_id])
+    type = params[:type]
+    authorize @profile, :get_images?, policy_class: Api::V1::ProfilePolicy
+    if !@profile
+      error(message: I18n.t("errors.resource_not_found", resource: "Profile"), status: :not_found)
+    else
+      succeed(data: { "#{type}_url": type == "avatar" ? @profile.avatar_url : @profile.bg_img_url })
+    end
+  end
 end

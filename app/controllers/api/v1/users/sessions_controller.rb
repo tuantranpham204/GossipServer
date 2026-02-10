@@ -76,7 +76,7 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
           roles: resource.roles,
           name: resource.profile.name,
           surname: resource.profile.surname,
-          avatar_url: resource.profile.avatar_data["url"]
+          avatar_url: resource.profile.avatar_url
         }
     }, message: I18n.t("devise.sessions.signed_in"))
     else

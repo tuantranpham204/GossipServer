@@ -102,4 +102,97 @@ RSpec.describe 'api/v1/profiles', type: :request do
       end
     end
   end
+
+  path '/api/v1/profiles/{id}' do
+    patch 'Update a specific profile' do
+      tags 'Profiles'
+      produces 'application/json'
+      security [ Bearer: [] ]
+
+      parameter schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          surname: { type: :string },
+          bio: { type: :string },
+          dob: { type: :string, format: :date },
+          gender: { type: :string },
+          relationship_status: { type: :string },
+          is_email_public: { type: :boolean },
+          is_gender_public: { type: :boolean },
+          is_rel_status_public: { type: :boolean }
+        }
+      }
+
+      response '200', 'profile updated' do
+        schema type: :object,
+          properties: {
+            data: {
+              type: :object,
+              properties: {
+                capacity: { type: :string },
+                user_id: { type: :integer },
+                username: { type: :string },
+                email: { type: :string, nullable: true },
+                name: { type: :string },
+                surname: { type: :string },
+                bio: { type: :string, nullable: true },
+                dob: { type: :string, format: :date, nullable: true },
+                gender: { type: :string, nullable: true },
+                relationship_status: { type: :string, nullable: true },
+                status: { type: :string, nullable: true },
+                avatar_data: {
+                  type: :object,
+                  properties: {
+                    url: { type: :string, nullable: true }
+                  }
+                },
+                is_email_public: { type: :boolean },
+                is_gender_public: { type: :boolean },
+                is_rel_status_public: { type: :boolean }
+              }
+            }
+          }
+
+        run_test!
+      end
+    end
+  end
+
+
+  path '/api/v1/profiles/update_images/{type}' do
+    patch 'Update profile images' do
+      tags 'Profiles'
+      consumes 'multipart/form-data'
+      produces 'application/json'
+      security [ Bearer: [] ]
+
+      parameter name: :type, in: :path, type: :string, description: 'Image type (avatar, background image)', required: true
+      parameter name: :image, in: :formData, schema: {
+        type: :object,
+        properties: {
+          image: { type: :string, format: :binary }
+        }
+      }
+
+      response '200', 'profile images updated' do
+        run_test!
+      end
+    end
+  end
+
+  path '/api/v1/profiles/get_images/{type}/{user_id}' do
+    get 'Get profile images' do
+      tags 'Profiles'
+      produces 'application/json'
+      security [ Bearer: [] ]
+
+      parameter name: :type, in: :path, type: :string, description: 'Image type (avatar, background image)', required: true
+      parameter name: :user_id, in: :path, type: :integer, description: 'User ID', required: true
+
+      response '200', 'profile images retrieved' do
+        run_test!
+      end
+    end
+  end
 end
