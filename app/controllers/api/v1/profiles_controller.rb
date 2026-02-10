@@ -30,10 +30,8 @@ class Api::V1::ProfilesController < ApplicationController
                     dob: profile.dob,
                     gender:  profile.is_gender_public ? profile.gender : nil,
                     relationship_status: profile.is_rel_status_public ? profile.relationship_status : nil,
-                    status: profile.is_email_public ? profile.status : nil,
-                    avatar_data: {
-                      url: profile.avatar_data["url"]
-                    },
+                    avatar_url: profile.avatar_url,
+                    bg_img_url: profile.bg_img_url,
                     friends_amount: profile.user.friends_amount,
                     followers_amount: profile.user.followers_amount,
                     following_amount: profile.user.following_amount,
@@ -63,6 +61,8 @@ class Api::V1::ProfilesController < ApplicationController
           capacity: "host",
           username: @profile.user.username,
           email: @profile.user.email,
+          avatar_url: @profile.avatar_url,
+          bg_img_url: @profile.bg_img_url,
           friends_amount: @profile.user.friends_amount,
           followers_amount: @profile.user.followers_amount,
           following_amount: @profile.user.following_amount,
@@ -83,10 +83,8 @@ class Api::V1::ProfilesController < ApplicationController
           dob: @profile.dob,
           gender:  @profile.is_gender_public ? @profile.gender : nil,
           relationship_status: @profile.is_rel_status_public ? @profile.relationship_status : nil,
-          status: @profile.is_email_public ? @profile.status : nil,
-          avatar_data: {
-            url: @profile.avatar_data["url"]
-          },
+          avatar_url: @profile.avatar_url,
+          bg_img_url: @profile.bg_img_url,
           friends_amount: @profile.user.friends_amount,
           followers_amount: @profile.user.followers_amount,
           following_amount: @profile.user.following_amount,
