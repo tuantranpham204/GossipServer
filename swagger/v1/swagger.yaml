@@ -188,6 +188,72 @@ paths:
                         type: integer
                       per_page:
                         type: integer
+  "/api/v1/profiles/{id}":
+    get:
+      summary: Show a specific profile
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: profile found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      capacity:
+                        type: string
+                      user_id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                      surname:
+                        type: string
+                      bio:
+                        type: string
+                        nullable: true
+                      dob:
+                        type: string
+                        format: date
+                        nullable: true
+                      gender:
+                        type: string
+                        nullable: true
+                      relationship_status:
+                        type: string
+                        nullable: true
+                      status:
+                        type: string
+                        nullable: true
+                      avatar_data:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            nullable: true
+                      is_email_public:
+                        type: boolean
+                      is_gender_public:
+                        type: boolean
+                      is_rel_status_public:
+                        type: boolean
 servers:
 - url: http://localhost:3000
 components:

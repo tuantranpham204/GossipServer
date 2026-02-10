@@ -59,4 +59,47 @@ RSpec.describe 'api/v1/profiles', type: :request do
       end
     end
   end
+
+  path '/api/v1/profiles/{id}' do
+    get 'Show a specific profile' do
+      tags 'Profiles'
+      produces 'application/json'
+      security [ Bearer: [] ]
+
+      parameter name: :id, in: :path, type: :integer, description: 'User ID', required: true
+
+      response '200', 'profile found' do
+        schema type: :object,
+          properties: {
+            data: {
+              type: :object,
+              properties: {
+                capacity: { type: :string },
+                user_id: { type: :integer },
+                username: { type: :string },
+                email: { type: :string, nullable: true },
+                name: { type: :string },
+                surname: { type: :string },
+                bio: { type: :string, nullable: true },
+                dob: { type: :string, format: :date, nullable: true },
+                gender: { type: :string, nullable: true },
+                relationship_status: { type: :string, nullable: true },
+                status: { type: :string, nullable: true },
+                avatar_data: {
+                  type: :object,
+                  properties: {
+                    url: { type: :string, nullable: true }
+                  }
+                },
+                is_email_public: { type: :boolean },
+                is_gender_public: { type: :boolean },
+                is_rel_status_public: { type: :boolean }
+              }
+            }
+          }
+
+        run_test!
+      end
+    end
+  end
 end
