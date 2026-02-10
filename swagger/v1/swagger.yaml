@@ -92,6 +92,298 @@ paths:
       responses:
         '401':
           description: unauthorized
+  "/api/v1/profiles/search":
+    get:
+      summary: Searches users by username or full name
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - name: q
+        in: query
+        description: Search term (username, first name, last name, full name, reversed
+          full name)
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Items per page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: search results found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: integer
+                        username:
+                          type: string
+                        email:
+                          type: string
+                          nullable: true
+                        name:
+                          type: string
+                        surname:
+                          type: string
+                        bio:
+                          type: string
+                          nullable: true
+                        dob:
+                          type: string
+                          format: date
+                          nullable: true
+                        gender:
+                          type: string
+                          nullable: true
+                        relationship_status:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          nullable: true
+                        avatar_data:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              nullable: true
+                        is_email_public:
+                          type: boolean
+                        is_gender_public:
+                          type: boolean
+                        is_rel_status_public:
+                          type: boolean
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      next_page:
+                        type: integer
+                        nullable: true
+                      prev_page:
+                        type: integer
+                        nullable: true
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+  "/api/v1/profiles/{id}":
+    get:
+      summary: Show a specific profile
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: profile found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      capacity:
+                        type: string
+                      user_id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                      surname:
+                        type: string
+                      bio:
+                        type: string
+                        nullable: true
+                      dob:
+                        type: string
+                        format: date
+                        nullable: true
+                      gender:
+                        type: string
+                        nullable: true
+                      relationship_status:
+                        type: string
+                        nullable: true
+                      status:
+                        type: string
+                        nullable: true
+                      avatar_data:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            nullable: true
+                      is_email_public:
+                        type: boolean
+                      is_gender_public:
+                        type: boolean
+                      is_rel_status_public:
+                        type: boolean
+    patch:
+      summary: Update a specific profile
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - schema:
+          type: object
+          properties:
+            name:
+              type: string
+            surname:
+              type: string
+            bio:
+              type: string
+            dob:
+              type: string
+              format: date
+            gender:
+              type: string
+            relationship_status:
+              type: string
+            is_email_public:
+              type: boolean
+            is_gender_public:
+              type: boolean
+            is_rel_status_public:
+              type: boolean
+      responses:
+        '200':
+          description: profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      capacity:
+                        type: string
+                      user_id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                      surname:
+                        type: string
+                      bio:
+                        type: string
+                        nullable: true
+                      dob:
+                        type: string
+                        format: date
+                        nullable: true
+                      gender:
+                        type: string
+                        nullable: true
+                      relationship_status:
+                        type: string
+                        nullable: true
+                      status:
+                        type: string
+                        nullable: true
+                      avatar_data:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            nullable: true
+                      is_email_public:
+                        type: boolean
+                      is_gender_public:
+                        type: boolean
+                      is_rel_status_public:
+                        type: boolean
+  "/api/v1/profiles/update_images/{type}":
+    patch:
+      summary: Update profile images
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - name: type
+        in: path
+        description: Image type (avatar, background image)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: profile images updated
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+  "/api/v1/profiles/get_images/{type}/{user_id}":
+    get:
+      summary: Get profile images
+      tags:
+      - Profiles
+      security:
+      - Bearer: []
+      parameters:
+      - name: type
+        in: path
+        description: Image type (avatar, background image)
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: profile images retrieved
 servers:
 - url: http://localhost:3000
 components:

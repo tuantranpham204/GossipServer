@@ -18,4 +18,19 @@ module ApiStandardization
       errors: errors
     }
   end
+
+  def paginate(data: {}, message: "Success.", status: :ok, meta: {
+    total_pages: nil,
+    total_count: nil,
+    current_page: nil,
+    per_page: nil
+  })
+    render json: {
+      code: Rack::Utils.status_code(status),
+      status: status,
+      data: data,
+      message: message,
+      meta: meta
+    }
+  end
 end
