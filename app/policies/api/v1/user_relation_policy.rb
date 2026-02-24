@@ -1,17 +1,21 @@
-class Api::V1::NotificationPolicy < ApplicationPolicy
-  def show?
+class Api::V1::UserRelationPolicy < ApplicationPolicy
+  def get_pending_requests?
     user && user.roles.include?(User::ROLES[:USER])
   end
 
-  def read?
+  def request_friend?
     user && user.roles.include?(User::ROLES[:USER])
   end
 
-  def read_all?
+  def accept_request?
     user && user.roles.include?(User::ROLES[:USER])
   end
 
-  def create?
+  def decline_request?
+    user && user.roles.include?(User::ROLES[:USER])
+  end
+
+  def request_follow?
     user && user.roles.include?(User::ROLES[:USER])
   end
 end

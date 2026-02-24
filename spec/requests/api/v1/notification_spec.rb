@@ -15,17 +15,29 @@ RSpec.describe 'api/v1/notifications', type: :request do
         schema type: :object,
           properties: {
             data: {
+              type: :array,
+              items: {
+                type: :object,
+                properties: {
+                  user_id: { type: :integer },
+                  actor_id: { type: :integer },
+                  actor_username: { type: :string },
+                  actor_avatar_url: { type: :string, nullable: true },
+                  status: { type: :integer },
+                  notifiable_type: { type: :integer },
+                  content: { type: :object },
+                  updated_at: { type: :string, format: :date_time },
+                  created_at: { type: :string, format: :date_time }
+                }
+              }
+            },
+            meta: {
               type: :object,
               properties: {
-                user_id: { type: :integer },
-                actor_id: { type: :integer },
-                actor_username: { type: :string },
-                actor_avatar_url: { type: :string, nullable: true },
-                status: { type: :integer },
-                notifiable_type: { type: :integer },
-                content: { type: :object },
-                updated_at: { type: :string, format: :date_time },
-                created_at: { type: :string, format: :date_time }
+                current_page: { type: :integer },
+                total_pages: { type: :integer },
+                total_count: { type: :integer },
+                per_page: { type: :integer }
               }
             }
           }

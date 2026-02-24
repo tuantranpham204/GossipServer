@@ -1,6 +1,4 @@
 class Api::V1::NotificationsController < ApplicationController
-  include Pundit::Authorization
-
   def show_by_user
     if !current_user.id
       error(message: I18n.t("devise.failure.unauthenticated"), status: :unauthorized)
@@ -11,7 +9,7 @@ class Api::V1::NotificationsController < ApplicationController
     paginate(
       data:
       @notifications.map do |notification|
-        @profile = Profile.find_by(user_id: notification.actor_id)
+        @profile = Profile.find_by(actor_id: notification.actor_id)
         {
           **notification.to_h,
           actor_avatar_url: @profile.avatar_url,

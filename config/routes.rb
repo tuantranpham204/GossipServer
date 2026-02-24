@@ -41,6 +41,15 @@ Rails.application.routes.draw do
           patch "read_all", to: "notifications#read_all"
         end
       end
+      resources :user_relations, only: [] do
+        collection do
+          get "pending/:relation_type", to: "user_relations#get_pending_requests"
+          post "friend/:receiver_id", to: "user_relations#request_friend"
+          post "follow/:receiver_id", to: "user_relations#request_follow"
+          patch "accept/:relation_type/:requester_id", to: "user_relations#accept_request"
+          patch "decline/:relation_type/:requester_id", to: "user_relations#decline_request"
+        end
+      end
     end
   end
 end
