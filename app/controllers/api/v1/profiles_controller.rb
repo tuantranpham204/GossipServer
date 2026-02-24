@@ -37,7 +37,9 @@ class Api::V1::ProfilesController < ApplicationController
                     following_amount: profile.user.following_amount,
                     is_email_public: profile.is_email_public,
                     is_gender_public: profile.is_gender_public,
-                    is_rel_status_public: profile.is_rel_status_public
+                    is_rel_status_public: profile.is_rel_status_public,
+                    friend_status: UserRelation.friend_status(current_user.id, profile.user_id),
+                    follow_status: UserRelation.follow_status(requester_id=current_user.id, requester_id=profile.user_id)
                   }
             end,
           meta: {
@@ -90,7 +92,9 @@ class Api::V1::ProfilesController < ApplicationController
           following_amount: @profile.user.following_amount,
           is_email_public: @profile.is_email_public,
           is_gender_public: @profile.is_gender_public,
-          is_rel_status_public: @profile.is_rel_status_public
+          is_rel_status_public: @profile.is_rel_status_public,
+          friend_status: UserRelation.friend_status(current_user.id, @profile.user_id),
+          follow_status: UserRelation.follow_status(requester_id=current_user.id, receiver_id=@profile.user_id)
         }
       )
     end

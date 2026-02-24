@@ -75,4 +75,27 @@ class UserRelation < ApplicationRecord
       receiver.update_column(:followers_amount, receiver.followers_amount - 1)
     end
   end
+
+  def self.friend_status(user1_id, user2_id)
+    relation = find_by(
+      "((requester_id = :u1 AND receiver_id = :u2) OR (requester_id = :u2 AND receiver_id = :u1)) AND relation_type = :type",
+      u1: user1_id,
+      u2: user2_id,
+      type: relation_types[:friend]
+    )
+    if relation
+      relation&.status
+    else
+      :not_friends
+    end
+  end
+
+  def self.follow_status(requester_id, receiver_id)
+    relation = find_by(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :follow)
+    if relation
+      relation&.status
+    else
+      :unfollowed
+    end
+  end
 end

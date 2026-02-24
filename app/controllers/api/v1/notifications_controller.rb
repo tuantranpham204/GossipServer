@@ -9,11 +9,11 @@ class Api::V1::NotificationsController < ApplicationController
     paginate(
       data:
       @notifications.map do |notification|
-        @profile = Profile.find_by(actor_id: notification.actor_id)
+        profile = Profile.find_by(user_id: notification.actor_id)
         {
           **notification.to_h,
-          actor_avatar_url: @profile.avatar_url,
-          actor_username: @profile.user.username
+          actor_avatar_url: profile.avatar_url,
+          actor_username: profile.user.username
         }
       end,
       meta: {
