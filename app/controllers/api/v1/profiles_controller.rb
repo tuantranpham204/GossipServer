@@ -97,12 +97,16 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def update
+    if !current_user.id
+      error(message: I18n.t("devise.failure.unauthenticated"), status: :unauthorized)
+    end
+
     @profile = Profile.find_by(user_id: current_user.id)
-    permitted_params = params.permit(:name, :surname, :bio, :dob, :gender, :relationship_status, :is_email_public, :is_gender_public, :is_rel_status_public)
+    permitted_params = params[:profile].permit(:name, :surname, :bio, :dob, :gender, :relationship_status, :is_email_public, :is_gender_public, :is_rel_status_public)
     authorize @profile, :update?, policy_class: Api::V1::ProfilePolicy
     if !@profile
       error(message: I18n.t("errors.resource_not_found", resource: "Profile"), status: :not_found)
-    elsif @profile.update(permitted_params)
+    elsif @profile.update!(permitted_params)
       profile_json = @profile.as_json
       succeed(
         data: {
@@ -115,15 +119,24 @@ class Api::V1::ProfilesController < ApplicationController
           followers_amount: @profile.user.followers_amount,
           following_amount: @profile.user.following_amount,
           **profile_json
-        }
+        },
+        message: I18n.t("success.profile_updated")
       )
     else
-      error(message: I18n.t("errors.validation_error"), status: :unprocessable_entity)
+      error_message_builder = ""
+      @profile.errors.full_messages.each do |error_message|
+        error_message_builder += error_message.to_s + ", "
+      end
+      error(message: "#{I18n.t("errors.validation_error")}: #{error_message_builder.chomp(", ")}.", status: :unprocessable_content)
     end
   end
 
 
   def update_images
+    if !current_user.id
+      error(message: I18n.t("devise.failure.unauthenticated"), status: :unauthorized)
+    end
+
     @profile = Profile.find_by(user_id: current_user.id)
     authorize @profile, :update?, policy_class: Api::V1::ProfilePolicy
     if !@profile
@@ -133,14 +146,22 @@ class Api::V1::ProfilesController < ApplicationController
     type = params[:type]
     case type
     when "avatar"
-        @profile.update(avatar: params[:image])
+        if !@profile.update(avatar: params[:image])
+          error(message: I18n.t("errors.update_failure", resource: "Profile"), status: :unprocessable_content)
+        end
     when "bg_img"
-        @profile.update(bg_img: params[:image])
+        if !@profile.update(bg_img: params[:image])
+          error(message: I18n.t("errors.update_failure", resource: "Profile"), status: :unprocessable_content)
+        end
     end
     succeed(data: { url: type == "avatar" ? @profile.avatar_url : @profile.bg_img_url })
   end
 
   def get_images
+    if !current_user.id
+      error(message: I18n.t("devise.failure.unauthenticated"), status: :unauthorized)
+    end
+
     @profile = Profile.find_by(user_id: params[:user_id])
     type = params[:type]
     authorize @profile, :get_images?, policy_class: Api::V1::ProfilePolicy

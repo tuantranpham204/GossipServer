@@ -1,9 +1,12 @@
 class Profile < ApplicationRecord
-  VALID_NAME_REGEX = /\A[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæœÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ ,.'-]+\z/
+  VALID_NAME_REGEX = /\A[\p{L}\p{M}\d\s]+\z/
   belongs_to :user
 
   has_one_attached :avatar
   has_one_attached :bg_img
+
+  enum :gender, { male: 1, female: 0 }
+  enum :relationship_status, { single: 0, in_a_relationship: 1, married: 2 }
 
   validates :name, presence: true, length: { minimum: 1, maximum: 50 }, format: { with: VALID_NAME_REGEX }
   validates :surname, presence: true, length: { minimum: 1, maximum: 50 }, format: { with: VALID_NAME_REGEX }
