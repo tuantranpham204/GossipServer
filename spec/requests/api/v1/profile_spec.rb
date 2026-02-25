@@ -30,15 +30,15 @@ RSpec.describe 'api/v1/profiles', type: :request do
                   gender: { type: :string, nullable: true },
                   relationship_status: { type: :string, nullable: true },
                   status: { type: :string, nullable: true },
-                  avatar_data: {
-                    type: :object,
-                    properties: {
-                      url: { type: :string, nullable: true }
-                    }
-                  },
+                  avatar_url: { type: :string, nullable: true },
+                  bg_img_url: { type: :string, nullable: true },
+                  followers_amt: { type: :integer },
+                  following_amt: { type: :integer },
                   is_email_public: { type: :boolean },
                   is_gender_public: { type: :boolean },
-                  is_rel_status_public: { type: :boolean }
+                  is_rel_status_public: { type: :boolean },
+                  friend_status: { type: :string },
+                  follow_status: { type: :string }
                 }
               }
             },
@@ -89,7 +89,11 @@ RSpec.describe 'api/v1/profiles', type: :request do
                 bg_img_url: { type: :string, nullable: true },
                 is_email_public: { type: :boolean },
                 is_gender_public: { type: :boolean },
-                is_rel_status_public: { type: :boolean }
+                is_rel_status_public: { type: :boolean },
+                followers_amt: { type: :integer },
+                following_amt: { type: :integer },
+                friend_status: { type: :string },
+                follow_status: { type: :string }
               }
             }
           }

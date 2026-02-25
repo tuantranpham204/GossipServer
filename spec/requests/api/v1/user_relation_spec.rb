@@ -8,6 +8,8 @@ RSpec.describe 'api/v1/user_relations', type: :request do
       produces 'application/json'
       security [ Bearer: [] ]
       parameter name: :relation_type, in: :path, type: :string, required: true
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response '200', 'User relations found' do
         schema type: :object,
@@ -26,6 +28,70 @@ RSpec.describe 'api/v1/user_relations', type: :request do
                   requester_surname: { type: :string },
                   requester_username: { type: :string }
                 }
+              }
+            },
+            meta: {
+              type: :object,
+              properties: {
+                total_pages: { type: :integer },
+                total_count: { type: :integer },
+                current_page: { type: :integer },
+                per_page: { type: :integer }
+              }
+            }
+          }
+        run_test!
+      end
+    end
+  end
+
+  path '/api/v1/user_relations/accepted/{relation_type}' do
+    get('get user relations accepted requests') do
+      tags 'User Relations'
+      produces 'application/json'
+      security [ Bearer: [] ]
+      parameter name: :relation_type, in: :path, type: :string, required: true
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
+
+      response '200', 'User relations found' do
+        schema type: :object,
+          properties: {
+            data: {
+              type: :array,
+              items: {
+                type: :object,
+                properties: {
+                  capacity: { type: :string },
+                  user_id: { type: :integer },
+                  username: { type: :string },
+                  email: { type: :string, nullable: true },
+                  name: { type: :string },
+                  surname: { type: :string },
+                  bio: { type: :string, nullable: true },
+                  dob: { type: :string, format: :date, nullable: true },
+                  gender: { type: :string, nullable: true },
+                  relationship_status: { type: :string, nullable: true },
+                  status: { type: :string, nullable: true },
+                  avatar_url: { type: :string, nullable: true },
+                  bg_img_url: { type: :string, nullable: true },
+                  followers_amt: { type: :integer },
+                  following_amt: { type: :integer },
+                  is_email_public: { type: :boolean },
+                  is_gender_public: { type: :boolean },
+                  is_rel_status_public: { type: :boolean },
+                  friend_status: { type: :string },
+                  follow_status: { type: :string }
+                }
+              }
+            },
+            meta: {
+              type: :object,
+              properties: {
+                total_pages: { type: :integer },
+                total_count: { type: :integer },
+                current_page: { type: :integer },
+                per_page: { type: :integer }
               }
             }
           }
@@ -58,6 +124,15 @@ RSpec.describe 'api/v1/user_relations', type: :request do
                   requester_surname: { type: :string },
                   requester_username: { type: :string }
                 }
+              }
+            },
+            meta: {
+              type: :object,
+              properties: {
+                total_pages: { type: :integer },
+                total_count: { type: :integer },
+                current_page: { type: :integer },
+                per_page: { type: :integer }
               }
             }
           }

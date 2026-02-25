@@ -24,12 +24,23 @@ class UserRelation < ApplicationRecord
   end
 
   def self.add_friend(requester_id, receiver_id, status)
-    if self.create!(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :friend, status: status)
-      requester = User.find(requester_id)
-      receiver = User.find(receiver_id)
-
-      requester.update_column(:friends_amount, requester.friends_amount + 1)
-      receiver.update_column(:friends_amount, receiver.friends_amount + 1)
+    status = status.to_sym
+    if ![ :pending, :accepted, :declined ].include?(status)
+      return nil
+    end
+    case status
+    when :pending
+      self.create(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :friend, status: status)
+    when :accepted
+      if self.create!(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :friend, status: status)
+        requester = User.find(requester_id)
+        receiver = User.find(receiver_id)
+        requester.update_column(:friends_amount, requester.friends_amount + 1)
+        receiver.update_column(:friends_amount, receiver.friends_amount + 1)
+      end
+      self
+    when :declined
+      self.exist? ? self.remove_friend(requester_id, receiver_id) : nil
     end
   end
 
@@ -53,12 +64,26 @@ class UserRelation < ApplicationRecord
 
 
   def self.follow(requester_id, receiver_id, status)
-    if self.create!(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :follow, status: status)
-      requester = User.find(requester_id)
-      receiver = User.find(receiver_id)
-
-      requester.update_column(:following_amount, requester.following_amount + 1)
-      receiver.update_column(:followers_amount, receiver.followers_amount + 1)
+    status = status.to_sym
+    if Profile.find_by(user_id: receiver_id)&.allow_direct_follows
+      status = :accepted
+    end
+    if ![ :pending, :accepted, :declined ].include?(status)
+      return nil
+    end
+    case status
+    when :pending
+      self.create(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :follow, status: status)
+    when :accepted
+      if self.create!(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :follow, status: status)
+        requester = User.find(requester_id)
+        receiver = User.find(receiver_id)
+        requester.update_column(:following_amount, requester.following_amount + 1)
+        receiver.update_column(:followers_amount, receiver.followers_amount + 1)
+      end
+      self
+    when :declined
+      self.exist? ? self.unfollow(requester_id, receiver_id) : nil
     end
   end
 

@@ -251,18 +251,26 @@ paths:
                         status:
                           type: string
                           nullable: true
-                        avatar_data:
-                          type: object
-                          properties:
-                            url:
-                              type: string
-                              nullable: true
+                        avatar_url:
+                          type: string
+                          nullable: true
+                        bg_img_url:
+                          type: string
+                          nullable: true
+                        followers_amt:
+                          type: integer
+                        following_amt:
+                          type: integer
                         is_email_public:
                           type: boolean
                         is_gender_public:
                           type: boolean
                         is_rel_status_public:
                           type: boolean
+                        friend_status:
+                          type: string
+                        follow_status:
+                          type: string
                   meta:
                     type: object
                     properties:
@@ -346,6 +354,14 @@ paths:
                         type: boolean
                       is_rel_status_public:
                         type: boolean
+                      followers_amt:
+                        type: integer
+                      following_amt:
+                        type: integer
+                      friend_status:
+                        type: string
+                      follow_status:
+                        type: string
   "/api/v1/profiles/update":
     patch:
       summary: Update a specific profile
@@ -497,6 +513,16 @@ paths:
         required: true
         schema:
           type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: User relations found
@@ -527,6 +553,113 @@ paths:
                           type: string
                         requester_username:
                           type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+  "/api/v1/user_relations/accepted/{relation_type}":
+    get:
+      summary: get user relations accepted requests
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        capacity:
+                          type: string
+                        user_id:
+                          type: integer
+                        username:
+                          type: string
+                        email:
+                          type: string
+                          nullable: true
+                        name:
+                          type: string
+                        surname:
+                          type: string
+                        bio:
+                          type: string
+                          nullable: true
+                        dob:
+                          type: string
+                          format: date
+                          nullable: true
+                        gender:
+                          type: string
+                          nullable: true
+                        relationship_status:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          nullable: true
+                        avatar_url:
+                          type: string
+                          nullable: true
+                        bg_img_url:
+                          type: string
+                          nullable: true
+                        followers_amt:
+                          type: integer
+                        following_amt:
+                          type: integer
+                        is_email_public:
+                          type: boolean
+                        is_gender_public:
+                          type: boolean
+                        is_rel_status_public:
+                          type: boolean
+                        friend_status:
+                          type: string
+                        follow_status:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
   "/api/v1/user_relations/{relation_type}":
     get:
       summary: get user relations
@@ -570,6 +703,17 @@ paths:
                           type: string
                         requester_username:
                           type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
   "/api/v1/user_relations/friend/{receiver_id}":
     post:
       summary: request friend

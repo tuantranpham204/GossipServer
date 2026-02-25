@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       resources :user_relations, only: [] do
         collection do
           get "pending/:relation_type", to: "user_relations#get_pending_requests"
+          get "accepted/:relation_type", to: "user_relations#get_accepted"
           post "friend/:receiver_id", to: "user_relations#request_friend"
           post "follow/:receiver_id", to: "user_relations#request_follow"
           patch "accept/:relation_type/:requester_id", to: "user_relations#accept_request"

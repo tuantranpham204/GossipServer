@@ -7,10 +7,10 @@ class Api::V1::UserRelationsController < ApplicationController
       error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
       return
     end
-    @user_relations = UserRelation.where(receiver_id: current_user.id, relation_type: relation_type.to_sym, status: :pending)
+    @user_relations = UserRelation.where(receiver_id: current_user.id, relation_type: relation_type.to_sym, status: :pending).page(params[:page]).per(params[:per_page])
     authorize @user_relations, :get_pending_requests?, policy_class: Api::V1::UserRelationPolicy
     if @user_relations
-      succeed(
+      paginate(
         data:
         @user_relations.map do |user_relation|
         requester = User.find(user_relation.requester_id)
@@ -24,7 +24,78 @@ class Api::V1::UserRelationsController < ApplicationController
           requester_surname: requester.profile.surname,
           requester_username: requester.username
         }
-      end)
+      end,
+      meta: {
+        total_count: @user_relations.count,
+        current_page: @user_relations.current_page,
+        total_pages: @user_relations.total_pages,
+        per_page: params[:per_page].to_i || 20
+      }
+    )
+    else
+      error(message: I18n.t("errors.get_failure", resource: "User Relation"), status: :unprocessable_content)
+    end
+  end
+
+
+  def get_accepted
+    relation_type = params[:relation_type]
+    if ![ "friend", "follow" ].include?(relation_type)
+      error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
+      return
+    end
+    @user_relations = UserRelation.new
+    if relation_type == "friend"
+      @user_relations = UserRelation.where(
+        "(requester_id = :user_id OR receiver_id = :user_id) AND relation_type = :type AND status = :status",
+        user_id: current_user.id,
+        type: UserRelation.relation_types[:friend],
+        status: UserRelation.statuses[:accepted]
+      ).page(params[:page]).per(params[:per_page])
+    elsif relation_type == "follow"
+      @user_relations = UserRelation.where(
+        receiver_id: current_user.id,
+        relation_type: :follow,
+        status: :accepted
+      ).page(params[:page]).per(params[:per_page])
+    end
+    authorize @user_relations, :get_accepted?, policy_class: Api::V1::UserRelationPolicy
+    if @user_relations
+      paginate(
+        data:
+        @user_relations.map do |user_relation|
+          opponent_id = current_user.id == user_relation.requester_id ? user_relation.receiver_id : user_relation.requester_id
+          opponent = Profile.find_by(user_id: opponent_id)
+          {
+                    capacity: "guest",
+                    user_id: opponent.user_id,
+                    username: opponent.user.username,
+                    email: opponent.is_email_public ? opponent.user.email : nil,
+                    name: opponent.name,
+                    surname: opponent.surname,
+                    bio: opponent.bio,
+                    dob: opponent.dob,
+                    gender:  opponent.is_gender_public ? opponent.gender : nil,
+                    relationship_status: opponent.is_rel_status_public ? opponent.relationship_status : nil,
+                    avatar_url: opponent.avatar_url,
+                    bg_img_url: opponent.bg_img_url,
+                    friends_amount: opponent.user.friends_amount,
+                    followers_amount: opponent.user.followers_amount,
+                    following_amount: opponent.user.following_amount,
+                    is_email_public: opponent.is_email_public,
+                    is_gender_public: opponent.is_gender_public,
+                    is_rel_status_public: opponent.is_rel_status_public,
+                    friend_status: relation_type == "friend" ? :accepted : UserRelation.friend_status(requester_id=current_user.id, receiver_id=opponent.user_id),
+                    follow_status: relation_type == "follow" ? :accepted : UserRelation.follow_status(requester_id=current_user.id, receiver_id=opponent.user_id)
+          }
+        end,
+        meta: {
+          total_pages: @user_relations.total_pages,
+          total_count: @user_relations.total_count,
+          current_page: @user_relations.current_page,
+          per_page: params[:per_page].to_i || 20
+        }
+      )
     else
       error(message: I18n.t("errors.get_failure", resource: "User Relation"), status: :unprocessable_content)
     end
@@ -52,13 +123,7 @@ class Api::V1::UserRelationsController < ApplicationController
       return
     end
 
-    is_receiver_allowed_direct_follow = User.find(params[:receiver_id]).profile.allow_direct_follows
-    if !is_receiver_allowed_direct_follow
-      status = :pending
-    else
-      status = :accepted
-    end
-    @user_relation = UserRelation.follow(current_user.id, params[:receiver_id], status)
+    @user_relation = UserRelation.follow(current_user.id, params[:receiver_id], :pending)
     authorize @user_relation, :request_follow?, policy_class: Api::V1::UserRelationPolicy
     if @user_relation
       create_notification(user_id: params[:receiver_id], actor_id: current_user.id, notification_type: :follow_request)
@@ -74,7 +139,6 @@ class Api::V1::UserRelationsController < ApplicationController
       error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
       return
     end
-
     @user_relation = UserRelation.find_by(requester_id: params[:requester_id], receiver_id: current_user.id, relation_type: relation_type.to_sym, status: :pending)
     authorize @user_relation, :accept_request?, policy_class: Api::V1::UserRelationPolicy
     if @user_relation

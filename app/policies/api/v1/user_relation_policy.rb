@@ -3,6 +3,10 @@ class Api::V1::UserRelationPolicy < ApplicationPolicy
     user && user.roles.include?(User::ROLES[:USER])
   end
 
+  def get_accepted?
+    user && user.roles.include?(User::ROLES[:USER])
+  end
+
   def request_friend?
     user && user.roles.include?(User::ROLES[:USER])
   end

@@ -11,7 +11,7 @@ class Api::V1::NotificationsController < ApplicationController
       @notifications.map do |notification|
         profile = Profile.find_by(user_id: notification.actor_id)
         {
-          **notification.to_h,
+          **notification.as_json,
           actor_avatar_url: profile.avatar_url,
           actor_username: profile.user.username
         }
