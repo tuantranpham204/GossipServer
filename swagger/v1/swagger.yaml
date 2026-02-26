@@ -500,6 +500,185 @@ paths:
       responses:
         '200':
           description: profile images retrieved
+  "/api/v1/rooms/private/show/{status}":
+    get:
+      summary: Show private rooms
+      tags:
+      - Rooms
+      security:
+      - Bearer: []
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Items per page
+        required: false
+        schema:
+          type: integer
+      - name: status
+        in: path
+        description: Room status
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: private rooms found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        room_type:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date_time
+                        updated_at:
+                          type: string
+                          format: date_time
+                        opponent:
+                          type: object
+                          properties:
+                            participant_id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            role:
+                              type: string
+                            avatar_url:
+                              type: string
+                            name:
+                              type: string
+                            surname:
+                              type: string
+                            username:
+                              type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+                      total_count:
+                        type: integer
+  "/api/v1/rooms/private/request/{receiver_id}":
+    post:
+      summary: Request a private room
+      tags:
+      - Rooms
+      security:
+      - Bearer: []
+      parameters:
+      - name: receiver_id
+        in: path
+        description: Receiver ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '201':
+          description: private room requested
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      room_type:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date_time
+                      updated_at:
+                        type: string
+                        format: date_time
+                      participants:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            room_id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            created_at:
+                              type: string
+                              format: date_time
+                            updated_at:
+                              type: string
+                              format: date_time
+                  message:
+                    type: string
+  "/api/v1/rooms/private/accept/{room_id}":
+    patch:
+      summary: Accept a private room request
+      tags:
+      - Rooms
+      security:
+      - Bearer: []
+      parameters:
+      - name: room_id
+        in: path
+        description: Room ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: private room accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  "/api/v1/rooms/private/decline/{room_id}":
+    patch:
+      summary: Decline a private room request
+      tags:
+      - Rooms
+      security:
+      - Bearer: []
+      parameters:
+      - name: room_id
+        in: path
+        description: Room ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: private room declined
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   "/api/v1/user_relations/pending/{relation_type}":
     get:
       summary: get user relations pending requests

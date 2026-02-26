@@ -39,7 +39,8 @@ class Api::V1::ProfilesController < ApplicationController
                     is_gender_public: profile.is_gender_public,
                     is_rel_status_public: profile.is_rel_status_public,
                     friend_status: UserRelation.friend_status(current_user.id, profile.user_id),
-                    follow_status: UserRelation.follow_status(requester_id=current_user.id, receiver_id=profile.user_id)
+                    follow_status: UserRelation.follow_status(requester_id=current_user.id, receiver_id=profile.user_id),
+                    room_type: Room.private_room_type(current_user.id, profile.user_id)
                   }
             end,
           meta: {
@@ -94,7 +95,8 @@ class Api::V1::ProfilesController < ApplicationController
           is_gender_public: @profile.is_gender_public,
           is_rel_status_public: @profile.is_rel_status_public,
           friend_status: UserRelation.friend_status(current_user.id, @profile.user_id),
-          follow_status: UserRelation.follow_status(requester_id=current_user.id, receiver_id=@profile.user_id)
+          follow_status: UserRelation.follow_status(requester_id=current_user.id, receiver_id=@profile.user_id),
+          room_type: Room.private_room_type(current_user.id, @profile.user_id)
         }
       )
     end

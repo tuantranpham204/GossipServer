@@ -51,6 +51,14 @@ Rails.application.routes.draw do
           patch "decline/:relation_type/:requester_id", to: "user_relations#decline_request"
         end
       end
+      resources :rooms, only: [] do
+        collection do
+          get "private/show/:status", to: "rooms#show_private"
+          post "private/request/:receiver_id", to: "rooms#request_private"
+          patch "private/accept/:room_id", to: "rooms#accept_private"
+          patch "private/decline/:room_id", to: "rooms#decline_private"
+        end
+      end
     end
   end
 end

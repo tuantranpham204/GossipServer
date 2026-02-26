@@ -31,7 +31,7 @@ class Api::V1::NotificationsController < ApplicationController
     if !@notification
       error(message: I18n.t("errors.resource_not_found", resource: "Notification"), status: :not_found)
     elsif @notification.update(status: :read)
-      succeed(data: @notification)
+      succeed(data: @notification, message: I18n.t("success.notification_read"))
     else
       error(message: I18n.t("errors.update_failure", resource: "Notification"), status: :unprocessable_content)
     end
