@@ -4,7 +4,7 @@ en:
     unpermitted: "You are not permitted to perform this action."
     resource_not_found: "%{resource} not found"
     update_failure: "%{resource} failed to update"
-    invalid_relation_type: "Invalid relation type"
+    invalid_resource_type: "Invalid %{resource} type"
     get_failure: "Failed to get %{resource}"
     create_failure: "Failed to create %{resource}"
     cannot_socialize_with_yourself: "You cannot perform this action on yourself"

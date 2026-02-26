@@ -4,7 +4,7 @@ class Api::V1::UserRelationsController < ApplicationController
   def get_pending_requests
     relation_type = params[:relation_type]
     if ![ "friend", "follow" ].include?(relation_type)
-      error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
+      error(message: error(message: I18n.t("errors.invalid_resource_type", resource: "UserRelation"), status: :bad_request)
       return
     end
     @user_relations = UserRelation.where(receiver_id: current_user.id, relation_type: relation_type.to_sym, status: :pending).page(params[:page]).per(params[:per_page])
@@ -41,7 +41,7 @@ class Api::V1::UserRelationsController < ApplicationController
   def get_accepted
     relation_type = params[:relation_type]
     if ![ "friend", "follow" ].include?(relation_type)
-      error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
+      error(message: error(message: I18n.t("errors.invalid_resource_type", resource: "UserRelation"), status: :bad_request)
       return
     end
     @user_relations = UserRelation.new
@@ -136,7 +136,7 @@ class Api::V1::UserRelationsController < ApplicationController
   def accept_request
     relation_type = params[:relation_type]
     if ![ "friend", "follow" ].include?(relation_type)
-      error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
+      error(message: I18n.t("errors.invalid_resource_type", resource: "UserRelation"), status: :bad_request)
       return
     end
     @user_relation = UserRelation.find_by(requester_id: params[:requester_id], receiver_id: current_user.id, relation_type: relation_type.to_sym, status: :pending)
@@ -153,7 +153,7 @@ class Api::V1::UserRelationsController < ApplicationController
   def decline_request
     relation_type = params[:relation_type]
     if ![ "friend", "follow" ].include?(relation_type)
-      error(message: I18n.t("errors.invalid_relation_type"), status: :bad_request)
+      error(message: error(message: I18n.t("errors.invalid_resource_type", resource: "UserRelation"), status: :bad_request)
       return
     end
 

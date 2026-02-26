@@ -26,11 +26,9 @@ RSpec.describe "Api::V1::Rooms", type: :request do
                   opponent: {
                     type: :object,
                     properties: {
-                      id: { type: :integer },
-                      room_id: { type: :integer },
+                      participant_id: { type: :integer },
                       user_id: { type: :integer },
-                      created_at: { type: :string, format: :date_time },
-                      updated_at: { type: :string, format: :date_time },
+                      role: { type: :string },
                       avatar_url: { type: :string },
                       name: { type: :string },
                       surname: { type: :string },

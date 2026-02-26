@@ -552,18 +552,12 @@ paths:
                         opponent:
                           type: object
                           properties:
-                            id:
-                              type: integer
-                            room_id:
+                            participant_id:
                               type: integer
                             user_id:
                               type: integer
-                            created_at:
+                            role:
                               type: string
-                              format: date_time
-                            updated_at:
-                              type: string
-                              format: date_time
                             avatar_url:
                               type: string
                             name:

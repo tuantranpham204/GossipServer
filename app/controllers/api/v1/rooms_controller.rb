@@ -3,29 +3,30 @@ class Api::V1::RoomsController < ApplicationController
 
   def show_private
     status = params[:status]
-    if [ "accepted", "pending", "declined" ].include?(status)
-      error(message: I18n.t("errors.invalid_relation_type"), status: :unprocessable_content)
+    if ![ "accepted", "pending", "declined" ].include?(status)
+      error(message: I18n.t("errors.invalid_resource_type", resource: "Room"), status: :unprocessable_content)
       return
     end
-    room_type = status == "accepted" ? :private_strangers : "private_strangers_#{status}"
-    @rooms = Room.where(room_type: room_type, participants: { user_id: current_user.id }).page(params[:page]).per(params[:per_page])
+    room_type = status == "accepted" ? :private_strangers : "private_strangers_#{status}".to_sym
+    @rooms = Room.joins("JOIN participants p ON p.room_id = rooms.id")
+            .where(room_type: room_type)
+            .where(" p.user_id = ? ", current_user.id)
+            .page(params[:page])
+            .per(params[:per_page])
     authorize @rooms, :show_private?, policy_class: Api::V1::RoomPolicy
     if @rooms
       paginate(
-        data: @rooms.each do | room |
+        data: @rooms.map do | room |
+          opponent = Participant.joins("JOIN rooms r ON r.id = participants.room_id").where(room_id: room.id).where("user_id != ?", current_user.id).first
           { **room.as_json,
-            opponent:
-            @room.participants.each do | participant |
-              if participant.user_id != current_user.id
-                opponent_profile = Profile.find_by(user_id: participant.user_id)
-                { **participant.as_json,
-                  avatar: opponent_profile.avatar_url,
-                  name: opponent_profile.name,
-                  surname: opponent_profile.surname,
-                  username: opponent_profile.username
-                }
-              end
-            end
+            opponent: {
+              user_id: opponent.user_id,
+              role: opponent.role,
+              avatar: opponent.user.profile.avatar_url,
+              name: opponent.user.profile.name,
+              surname: opponent.user.profile.surname,
+              username: opponent.user.username
+            }
           }
         end,
         meta: {
