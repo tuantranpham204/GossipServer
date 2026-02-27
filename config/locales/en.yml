@@ -3,3 +3,6 @@ en:
     validation_error: "Validation error"
     unpermitted: "You are not permitted to perform this action."
     resource_not_found: "%{resource} not found"
+    update_failure: "%{resource} failed to update"
+  success:
+    profile_updated: "Profile updated successfully"

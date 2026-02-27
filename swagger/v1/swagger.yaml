@@ -92,6 +92,85 @@ paths:
       responses:
         '401':
           description: unauthorized
+  "/api/v1/notifications/show_by_user":
+    get:
+      summary: Show notifications by current user
+      tags:
+      - Notifications
+      security:
+      - Bearer: []
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Items per page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: notifications found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user_id:
+                        type: integer
+                      actor_id:
+                        type: integer
+                      actor_username:
+                        type: string
+                      actor_avatar_url:
+                        type: string
+                        nullable: true
+                      status:
+                        type: integer
+                      notifiable_type:
+                        type: integer
+                      content:
+                        type: object
+                      updated_at:
+                        type: string
+                        format: date_time
+                      created_at:
+                        type: string
+                        format: date_time
+  "/api/v1/notifications/read/{id}":
+    patch:
+      summary: Read a notification
+      tags:
+      - Notifications
+      security:
+      - Bearer: []
+      parameters:
+      - name: id
+        in: path
+        description: Notification ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: notification read
+  "/api/v1/notifications/read_all":
+    patch:
+      summary: Read all notifications
+      tags:
+      - Notifications
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: all notifications read
   "/api/v1/profiles/search":
     get:
       summary: Searches users by username or full name
@@ -242,47 +321,26 @@ paths:
                       status:
                         type: string
                         nullable: true
-                      avatar_data:
-                        type: object
-                        properties:
-                          url:
-                            type: string
-                            nullable: true
+                      avatar_url:
+                        type: string
+                        nullable: true
+                      bg_img_url:
+                        type: string
+                        nullable: true
                       is_email_public:
                         type: boolean
                       is_gender_public:
                         type: boolean
                       is_rel_status_public:
                         type: boolean
+  "/api/v1/profiles/update":
     patch:
       summary: Update a specific profile
       tags:
       - Profiles
       security:
       - Bearer: []
-      parameters:
-      - schema:
-          type: object
-          properties:
-            name:
-              type: string
-            surname:
-              type: string
-            bio:
-              type: string
-            dob:
-              type: string
-              format: date
-            gender:
-              type: string
-            relationship_status:
-              type: string
-            is_email_public:
-              type: boolean
-            is_gender_public:
-              type: boolean
-            is_rel_status_public:
-              type: boolean
+      parameters: []
       responses:
         '200':
           description: profile updated
@@ -294,8 +352,6 @@ paths:
                   data:
                     type: object
                     properties:
-                      capacity:
-                        type: string
                       user_id:
                         type: integer
                       username:
@@ -320,21 +376,52 @@ paths:
                       relationship_status:
                         type: string
                         nullable: true
-                      status:
-                        type: string
-                        nullable: true
-                      avatar_data:
-                        type: object
-                        properties:
-                          url:
-                            type: string
-                            nullable: true
                       is_email_public:
                         type: boolean
                       is_gender_public:
                         type: boolean
                       is_rel_status_public:
                         type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                surname:
+                  type: string
+                bio:
+                  type: string
+                dob:
+                  type: string
+                  format: date
+                gender:
+                  type: integer
+                  default: 1
+                relationship_status:
+                  type: integer
+                  default: 0
+                is_email_public:
+                  type: boolean
+                  default: false
+                is_gender_public:
+                  type: boolean
+                  default: true
+                is_rel_status_public:
+                  type: boolean
+                  default: true
+              required:
+              - name
+              - surname
+              - bio
+              - dob
+              - gender
+              - relationship_status
+              - is_email_public
+              - is_gender_public
+              - is_rel_status_public
   "/api/v1/profiles/update_images/{type}":
     patch:
       summary: Update profile images

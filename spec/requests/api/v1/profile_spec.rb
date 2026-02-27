@@ -85,12 +85,8 @@ RSpec.describe 'api/v1/profiles', type: :request do
                 gender: { type: :string, nullable: true },
                 relationship_status: { type: :string, nullable: true },
                 status: { type: :string, nullable: true },
-                avatar_data: {
-                  type: :object,
-                  properties: {
-                    url: { type: :string, nullable: true }
-                  }
-                },
+                avatar_url: { type: :string, nullable: true },
+                bg_img_url: { type: :string, nullable: true },
                 is_email_public: { type: :boolean },
                 is_gender_public: { type: :boolean },
                 is_rel_status_public: { type: :boolean }
@@ -103,25 +99,27 @@ RSpec.describe 'api/v1/profiles', type: :request do
     end
   end
 
-  path '/api/v1/profiles/{id}' do
+  path '/api/v1/profiles/update' do
     patch 'Update a specific profile' do
       tags 'Profiles'
+      consumes 'application/json'
       produces 'application/json'
       security [ Bearer: [] ]
 
-      parameter schema: {
+      parameter name: :profile, in: :body, schema: {
         type: :object,
         properties: {
           name: { type: :string },
           surname: { type: :string },
           bio: { type: :string },
           dob: { type: :string, format: :date },
-          gender: { type: :string },
-          relationship_status: { type: :string },
-          is_email_public: { type: :boolean },
-          is_gender_public: { type: :boolean },
-          is_rel_status_public: { type: :boolean }
-        }
+          gender: { type: :integer, default: 1 },
+          relationship_status: { type: :integer, default: 0 },
+          is_email_public: { type: :boolean, default: false },
+          is_gender_public: { type: :boolean, default: true },
+          is_rel_status_public: { type: :boolean, default: true }
+        },
+        required: %w[name surname bio dob gender relationship_status is_email_public is_gender_public is_rel_status_public]
       }
 
       response '200', 'profile updated' do
@@ -130,7 +128,6 @@ RSpec.describe 'api/v1/profiles', type: :request do
             data: {
               type: :object,
               properties: {
-                capacity: { type: :string },
                 user_id: { type: :integer },
                 username: { type: :string },
                 email: { type: :string, nullable: true },
@@ -140,13 +137,6 @@ RSpec.describe 'api/v1/profiles', type: :request do
                 dob: { type: :string, format: :date, nullable: true },
                 gender: { type: :string, nullable: true },
                 relationship_status: { type: :string, nullable: true },
-                status: { type: :string, nullable: true },
-                avatar_data: {
-                  type: :object,
-                  properties: {
-                    url: { type: :string, nullable: true }
-                  }
-                },
                 is_email_public: { type: :boolean },
                 is_gender_public: { type: :boolean },
                 is_rel_status_public: { type: :boolean }
