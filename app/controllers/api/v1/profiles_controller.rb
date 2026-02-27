@@ -30,9 +30,8 @@ class Api::V1::ProfilesController < ApplicationController
             gender:  profile.is_gender_public ? profile.gender : nil,
             relationship_status: profile.is_rel_status_public ? profile.relationship_status : nil,
             status: profile.is_email_public ? profile.status : nil,
-            avatar_data: {
-              url: profile.avatar_data["url"]
-            },
+            avatar_url: profile.avatar_url,
+            bg_img_url: profile.bg_img_url,
             is_email_public: profile.is_email_public,
             is_gender_public: profile.is_gender_public,
             is_rel_status_public: profile.is_rel_status_public,
