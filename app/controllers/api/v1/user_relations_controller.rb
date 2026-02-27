@@ -37,7 +37,6 @@ class Api::V1::UserRelationsController < ApplicationController
     end
   end
 
-
   def get_accepted
     relation_type = params[:relation_type]
     if ![ "friend", "follow" ].include?(relation_type)
