@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_10_063238) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_27_023213) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,10 +53,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_063238) do
     t.jsonb "attachment_data"
     t.text "content"
     t.datetime "created_at", null: false
-    t.boolean "is_deleted"
+    t.boolean "is_deleted", default: false
     t.integer "message_type"
+    t.datetime "read_at"
     t.bigint "room_id", null: false
     t.bigint "sender_id", null: false
+    t.datetime "sent_at"
+    t.jsonb "status_data", default: [{"status" => 0, "participant_id" => nil}], array: true
     t.datetime "updated_at", null: false
     t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
@@ -86,7 +89,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_063238) do
 
   create_table "profiles", primary_key: "user_id", force: :cascade do |t|
     t.boolean "allow_direct_follows", default: true, null: false
-    t.jsonb "avatar_data", default: {"url" => "https://i.pinimg.com/736x/cc/58/7b/cc587bf43e916ec9197c8842d675265c.jpg", "public_id" => nil}
     t.string "bio", default: ""
     t.datetime "created_at", null: false
     t.date "dob"
@@ -148,7 +150,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_063238) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.integer "roles", default: [1], null: false, array: true
-    t.string "timestamps"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.string "username", null: false

@@ -17,7 +17,7 @@ paths:
           description: unauthorized
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -92,6 +92,87 @@ paths:
       responses:
         '401':
           description: unauthorized
+  "/api/v1/messages/create/{room_id}":
+    post:
+      summary: Creates a message with optional media attachments
+      tags:
+      - Messages
+      security:
+      - Bearer: []
+      parameters:
+      - name: room_id
+        in: path
+        description: ID of the room
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Message successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message sent successfully.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      room_id:
+                        type: integer
+                      sender_id:
+                        type: integer
+                      content:
+                        type: string
+                      status_data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            participant_id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            status:
+                              type: integer
+                      attachments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            blob_id:
+                              type: integer
+                            filename:
+                              type: string
+                            mime_type:
+                              type: string
+                            file_size:
+                              type: integer
+                            url:
+                              type: string
+                              format: uri
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Text content of the message
+                  example: Here are the requested files!
+                attachments[]:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Select one or more media files to attach
+              required:
+              - content
   "/api/v1/notifications/show_by_user":
     get:
       summary: Show notifications by current user

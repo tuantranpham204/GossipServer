@@ -5,7 +5,7 @@ RSpec.describe 'api/v1/users', type: :request, swagger_doc: 'v1/swagger.yaml' do
   path '/api/v1/users/sign_up' do
     post('Sign Up') do
       tags 'Authentication'
-      consumes 'application/json'
+      consumes 'multipart/form-data'
       produces 'application/json'
 
       parameter name: :user, in: :body, schema: {

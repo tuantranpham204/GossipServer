@@ -68,7 +68,7 @@ class UserRelation < ApplicationRecord
     if Profile.find_by(user_id: receiver_id)&.allow_direct_follows
       status = :accepted
     end
-    if ![ :pending, :accepted, :declined ].include?(status)
+    if ![:pending, :accepted, :declined].include?(status)
       return nil
     end
     case status

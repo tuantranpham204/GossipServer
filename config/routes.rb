@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   mount Rswag::Api::Engine => "/api-docs"
   mount Rswag::Ui::Engine => "/api-docs"
   mount Sidekiq::Web => "/sidekiq"
+  mount ActionCable.server => "/cable"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -57,6 +58,13 @@ Rails.application.routes.draw do
           post "private/request/:receiver_id", to: "rooms#request_private"
           patch "private/accept/:room_id", to: "rooms#accept_private"
           patch "private/decline/:room_id", to: "rooms#decline_private"
+        end
+      end
+      resources :messages, only: [] do
+        collection do
+          post "create/:room_id", to: "messages#create"
+          get "show_by_room/:room_id", to: "messages#show_by_room"
+          patch "read/:message_id", to: "messages#read"
         end
       end
     end
