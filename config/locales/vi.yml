@@ -1,3 +1,5 @@
 vi:
   errors:
     validation_error: "Lỗi xác thực"
+    unpermitted: "Bạn không được phép thực hiện hành động này."
+    resource_not_found: "%{resource} không tìm thấy"
