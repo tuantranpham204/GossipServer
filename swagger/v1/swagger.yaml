@@ -121,29 +121,42 @@ paths:
                 type: object
                 properties:
                   data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: integer
+                        actor_id:
+                          type: integer
+                        actor_username:
+                          type: string
+                        actor_avatar_url:
+                          type: string
+                          nullable: true
+                        status:
+                          type: integer
+                        notifiable_type:
+                          type: integer
+                        content:
+                          type: object
+                        updated_at:
+                          type: string
+                          format: date_time
+                        created_at:
+                          type: string
+                          format: date_time
+                  meta:
                     type: object
                     properties:
-                      user_id:
+                      current_page:
                         type: integer
-                      actor_id:
+                      total_pages:
                         type: integer
-                      actor_username:
-                        type: string
-                      actor_avatar_url:
-                        type: string
-                        nullable: true
-                      status:
+                      total_count:
                         type: integer
-                      notifiable_type:
+                      per_page:
                         type: integer
-                      content:
-                        type: object
-                      updated_at:
-                        type: string
-                        format: date_time
-                      created_at:
-                        type: string
-                        format: date_time
   "/api/v1/notifications/read/{id}":
     patch:
       summary: Read a notification
@@ -238,18 +251,26 @@ paths:
                         status:
                           type: string
                           nullable: true
-                        avatar_data:
-                          type: object
-                          properties:
-                            url:
-                              type: string
-                              nullable: true
+                        avatar_url:
+                          type: string
+                          nullable: true
+                        bg_img_url:
+                          type: string
+                          nullable: true
+                        followers_amt:
+                          type: integer
+                        following_amt:
+                          type: integer
                         is_email_public:
                           type: boolean
                         is_gender_public:
                           type: boolean
                         is_rel_status_public:
                           type: boolean
+                        friend_status:
+                          type: string
+                        follow_status:
+                          type: string
                   meta:
                     type: object
                     properties:
@@ -333,6 +354,14 @@ paths:
                         type: boolean
                       is_rel_status_public:
                         type: boolean
+                      followers_amt:
+                        type: integer
+                      following_amt:
+                        type: integer
+                      friend_status:
+                        type: string
+                      follow_status:
+                        type: string
   "/api/v1/profiles/update":
     patch:
       summary: Update a specific profile
@@ -471,6 +500,348 @@ paths:
       responses:
         '200':
           description: profile images retrieved
+  "/api/v1/user_relations/pending/{relation_type}":
+    get:
+      summary: get user relations pending requests
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        requester_id:
+                          type: integer
+                        receiver_id:
+                          type: integer
+                        relation_type:
+                          type: string
+                        status:
+                          type: string
+                        requester_avatar_url:
+                          type: string
+                          nullable: true
+                        requester_name:
+                          type: string
+                        requester_surname:
+                          type: string
+                        requester_username:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+  "/api/v1/user_relations/accepted/{relation_type}":
+    get:
+      summary: get user relations accepted requests
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        capacity:
+                          type: string
+                        user_id:
+                          type: integer
+                        username:
+                          type: string
+                        email:
+                          type: string
+                          nullable: true
+                        name:
+                          type: string
+                        surname:
+                          type: string
+                        bio:
+                          type: string
+                          nullable: true
+                        dob:
+                          type: string
+                          format: date
+                          nullable: true
+                        gender:
+                          type: string
+                          nullable: true
+                        relationship_status:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          nullable: true
+                        avatar_url:
+                          type: string
+                          nullable: true
+                        bg_img_url:
+                          type: string
+                          nullable: true
+                        followers_amt:
+                          type: integer
+                        following_amt:
+                          type: integer
+                        is_email_public:
+                          type: boolean
+                        is_gender_public:
+                          type: boolean
+                        is_rel_status_public:
+                          type: boolean
+                        friend_status:
+                          type: string
+                        follow_status:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+  "/api/v1/user_relations/{relation_type}":
+    get:
+      summary: get user relations
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        requester_id:
+                          type: integer
+                        receiver_id:
+                          type: integer
+                        relation_type:
+                          type: string
+                        status:
+                          type: string
+                        requester_avatar_url:
+                          type: string
+                          nullable: true
+                        requester_name:
+                          type: string
+                        requester_surname:
+                          type: string
+                        requester_username:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+  "/api/v1/user_relations/friend/{receiver_id}":
+    post:
+      summary: request friend
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: receiver_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        requester_id:
+                          type: integer
+                        receiver_id:
+                          type: integer
+                        relation_type:
+                          type: string
+                        status:
+                          type: string
+                        requester_avatar_url:
+                          type: string
+                          nullable: true
+                        requester_name:
+                          type: string
+                        requester_surname:
+                          type: string
+                        requester_username:
+                          type: string
+  "/api/v1/user_relations/follow/{receiver_id}":
+    post:
+      summary: request follow
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: receiver_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        requester_id:
+                          type: integer
+                        receiver_id:
+                          type: integer
+                        relation_type:
+                          type: string
+                        status:
+                          type: string
+                        requester_avatar_url:
+                          type: string
+                          nullable: true
+                        requester_name:
+                          type: string
+                        requester_surname:
+                          type: string
+                        requester_username:
+                          type: string
+  "/api/v1/user_relations/accept/{relation_type}/{requester_id}":
+    patch:
+      summary: accept request
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: requester_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
+  "/api/v1/user_relations/decline/{relation_type}/{requester_id}":
+    patch:
+      summary: decline request
+      tags:
+      - User Relations
+      security:
+      - Bearer: []
+      parameters:
+      - name: relation_type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: requester_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User relations found
 servers:
 - url: http://localhost:3000
 components:

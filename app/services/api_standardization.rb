@@ -23,8 +23,7 @@ module ApiStandardization
     total_pages: nil,
     total_count: nil,
     current_page: nil,
-    per_page: nil
-  })
+    per_page: nil })
     render json: {
       code: Rack::Utils.status_code(status),
       status: status,

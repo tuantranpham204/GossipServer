@@ -10,4 +10,8 @@ class Api::V1::NotificationPolicy < ApplicationPolicy
   def read_all?
     user && user.roles.include?(User::ROLES[:USER])
   end
+
+  def create?
+    user && user.roles.include?(User::ROLES[:USER])
+  end
 end
