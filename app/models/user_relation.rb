@@ -118,19 +118,11 @@ class UserRelation < ApplicationRecord
       u2: user2_id,
       type: relation_types[:friend]
     )
-    if relation
-      relation&.status
-    else
-      :not_friends
-    end
+    relation ? relation&.status : :not_friends
   end
 
   def self.follow_status(requester_id, receiver_id)
     relation = find_by(requester_id: requester_id.to_i, receiver_id: receiver_id.to_i, relation_type: :follow)
-    if relation
-      relation&.status
-    else
-      :unfollowed
-    end
+    relation ? relation&.status : :unfollowed
   end
 end
